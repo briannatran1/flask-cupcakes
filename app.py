@@ -22,8 +22,10 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 toolbar = DebugToolbarExtension(app)
 
 
+# TODO: Make an example dict/list/etc. that describes the shape/structure of the output.
+
 @app.get('/api/cupcakes')
-def show_cupcakes_data():
+def list_cupcakes():
     """Get data about all cupcakes and return JSON"""
     cupcakes = Cupcake.query.all()
     serialized = [cupcake.serialize() for cupcake in cupcakes]
@@ -32,7 +34,7 @@ def show_cupcakes_data():
 
 
 @app.get('/api/cupcakes/<int:cupcake_id>')
-def show_data_on_single_cupcake(cupcake_id):
+def get_cupcake(cupcake_id):
     """Get data about a single cupcake"""
     cupcake = Cupcake.query.get_or_404(cupcake_id)
     serialized = cupcake.serialize()
@@ -47,7 +49,7 @@ def create_cupcake():
     flavor = request.json['flavor']
     size = request.json['size']
     rating = request.json['rating']
-    image_url = request.json['image_url']
+    image_url = request.json['image_url'] or None
 
     new_cupcake = Cupcake(flavor=flavor,
                           size=size,
@@ -60,3 +62,44 @@ def create_cupcake():
     serialized = new_cupcake.serialize()
 
     return (jsonify(cupcake=serialized), 201)
+
+
+
+@app.patch('/api/cupcakes/<int:cupcake_id>')
+def update_cupcake(cupcake_id):
+    """Update data about a single cupcake"""
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    flavor = request.json.get('flavor')
+    size = request.json.get('size')
+    rating = request.json.get('rating')
+    image_url = request.json.get('image_url')
+
+    if flavor:
+        cupcake.flavor = flavor
+    if size:
+        cupcake.size = size
+    if rating:
+        cupcake.rating = rating
+    if image_url:
+        cupcake.image_url = image_url
+
+    cupcake.verified = True # Do we need this?
+    db.session.commit()
+
+    serialized = cupcake.serialize()
+
+    return jsonify(cupcake=serialized)
+
+
+@app.delete('/api/cupcakes/<int:cupcake_id>')
+def delete_cupcake(cupcake_id):
+    """Delete a single cupcake"""
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    db.session.delete(cupcake)
+    db.session.commit()
+
+    return jsonify(deleted=[cupcake_id])

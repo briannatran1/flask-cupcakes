@@ -21,15 +21,6 @@ class Cupcake(db.Model):
     """Cupcake."""
     __tablename__ = 'cupcakes'
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "flavor": self.flavor,
-            "size": self.size,
-            "rating": self.rating,
-            "image_url": self.image_url
-        }
-
     id = db.Column(
         db.Integer,
         primary_key=True,
@@ -56,3 +47,12 @@ class Cupcake(db.Model):
         nullable=True,
         default=DEFAULT_IMAGE
     )
+
+    def serialize(self): #TODO: Add docstring
+        return {
+            "id": self.id,
+            "flavor": self.flavor,
+            "size": self.size,
+            "rating": self.rating,
+            "image_url": self.image_url
+        }
