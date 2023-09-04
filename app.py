@@ -64,7 +64,6 @@ def create_cupcake():
     return (jsonify(cupcake=serialized), 201)
 
 
-
 @app.patch('/api/cupcakes/<int:cupcake_id>')
 def update_cupcake(cupcake_id):
     """Update data about a single cupcake"""
@@ -85,7 +84,6 @@ def update_cupcake(cupcake_id):
     if image_url:
         cupcake.image_url = image_url
 
-    cupcake.verified = True # Do we need this?
     db.session.commit()
 
     serialized = cupcake.serialize()
