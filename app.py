@@ -27,9 +27,8 @@ toolbar = DebugToolbarExtension(app)
 @app.get('/')
 def show_homepage():
     """Show homepage which includes list of cupcakes and form to add cupcake"""
-    cupcakes = Cupcake.query.all()
 
-    return render_template('homepage.html', cupcakes=cupcakes)
+    return render_template('homepage.html')
 
 
 @app.get('/api/cupcakes')
