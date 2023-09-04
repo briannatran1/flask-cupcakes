@@ -1,53 +1,35 @@
 "use strict";
 
-const BASE_URL = '/api/cupcakes';
-
-const $addCupcakeButton = $("add-cupcake");
-const $cupcakeField = $("cupcake-field");
-const $flavorField = $("flavor");
-const $sizeField = $("size");
-const $ratingField = $("rating");
-const $imageUrlField = $("image_url");
+const $cupcakeField = $(".cupcake-field");
+const $addCupcakeForm = $("#add-cupcake-form");
 
 
-$addCupcakeButton.on('click', handleClick);
-
-console.log("Running app...");
-
-async function handleClick(evt) {
+async function addCupcake(evt) {
   evt.preventDefault();
 
-  await addCupcake();
-}
+  let flavor = $("#flavor").val();
+  let size = $("#size").val();
+  let rating = $("#rating").val();
+  let image_url = $("#image_url").val();
 
-async function addCupcake() {
-
-  const requestBody = {
-    flavor: $flavorField.val(),
-    size: $sizeField.val(),
-    rating: $ratingField.val(),
-    imageUrl: $imageUrlField.val()
-  };
-
-  console.log("Request Body", requestBody);
+  const requestBody = {flavor, size, rating, image_url};
 
   const response = await fetch(
-    BASE_URL,
+    '/api/cupcakes',
     {
       method: "POST",
       body: JSON.stringify(requestBody),
       headers: {"content-type": "application/json"},
     });
 
-    const data = await response.json()
+    // console.log("RESPONSE", response);
 
-    flavor = data.map(cupcake => ({
-      flavor: cupcake.flavor
-    }));
+    const data = await response.json();
 
-    console.log("Data", data)
+    // console.log("Data", data, data.cupcake)
+
+    $cupcakeField.append(JSON.stringify(data.cupcake));
+  }
 
 
-    $cupcakeField.append(flavor);
-
-}
+$addCupcakeForm.on('submit', addCupcake);
