@@ -70,19 +70,10 @@ def update_cupcake(cupcake_id):
 
     cupcake = Cupcake.query.get_or_404(cupcake_id)
 
-    flavor = request.json.get('flavor')
-    size = request.json.get('size')
-    rating = request.json.get('rating')
-    image_url = request.json.get('image_url')
-
-    if flavor:
-        cupcake.flavor = flavor
-    if size:
-        cupcake.size = size
-    if rating:
-        cupcake.rating = rating
-    if image_url:
-        cupcake.image_url = image_url
+    cupcake.flavor = request.json.get('flavor', cupcake.flavor)
+    cupcake.size = request.json.get('size', cupcake.size)
+    cupcake.rating = request.json.get('rating', cupcake.rating)
+    cupcake.image_url = request.json.get('image_url', cupcake.image_url)
 
     db.session.commit()
 
@@ -93,7 +84,7 @@ def update_cupcake(cupcake_id):
 
 @app.delete('/api/cupcakes/<int:cupcake_id>')
 def delete_cupcake(cupcake_id):
-    """Delete a single cupcake"""
+    """Delete a single cupcake and return JSON {deleted: [cupcake_id]}"""
 
     cupcake = Cupcake.query.get_or_404(cupcake_id)
 
