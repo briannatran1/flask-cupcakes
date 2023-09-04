@@ -3,7 +3,7 @@ import os
 
 from models import db, connect_db, Cupcake
 from flask_debugtoolbar import DebugToolbarExtension
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
 
@@ -23,6 +23,14 @@ toolbar = DebugToolbarExtension(app)
 
 
 # TODO: Make an example dict/list/etc. that describes the shape/structure of the output.
+
+@app.get('/')
+def show_homepage():
+    """Show homepage which includes list of cupcakes and form to add cupcake"""
+    cupcakes = Cupcake.query.all()
+
+    return render_template('homepage.html', cupcakes=cupcakes)
+
 
 @app.get('/api/cupcakes')
 def list_cupcakes():
