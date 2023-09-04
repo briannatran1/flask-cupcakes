@@ -48,7 +48,8 @@ class Cupcake(db.Model):
         default=DEFAULT_IMAGE
     )
 
-    def serialize(self): #TODO: Add docstring
+    def serialize(self):
+        """Serialize to dictionary."""
         return {
             "id": self.id,
             "flavor": self.flavor,
